@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2048
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DGT.Data", "DGT.Data\DGT.Data.csproj", "{28FEC7D7-7D48-40BA-BE40-62B6C05B8DB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DGT.Web", "DGT.Web\DGT.Web.csproj", "{20EC1D6F-1C8F-4EE1-9C31-3A0BECCD1CD6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28FEC7D7-7D48-40BA-BE40-62B6C05B8DB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28FEC7D7-7D48-40BA-BE40-62B6C05B8DB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28FEC7D7-7D48-40BA-BE40-62B6C05B8DB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28FEC7D7-7D48-40BA-BE40-62B6C05B8DB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20EC1D6F-1C8F-4EE1-9C31-3A0BECCD1CD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20EC1D6F-1C8F-4EE1-9C31-3A0BECCD1CD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20EC1D6F-1C8F-4EE1-9C31-3A0BECCD1CD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20EC1D6F-1C8F-4EE1-9C31-3A0BECCD1CD6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F073AF24-2D51-408A-A257-852463BC9F04}
+	EndGlobalSection
+EndGlobal
