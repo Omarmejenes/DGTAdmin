@@ -12,10 +12,8 @@ namespace DGT.Data.Entities
 
         public string Apellidos { get; set; }
 
-        public double Puntos { get; set; }
-
         public ICollection<Vehiculo> Vehiculos { get; set; }
 
-        public virtual ICollection<Infraccion> Infracciones { get; set; }
+        public virtual ICollection<ConductorInfraccion> Infracciones { get; set; }
     }
 }

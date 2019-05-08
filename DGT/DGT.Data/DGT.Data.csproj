@@ -51,10 +51,11 @@
     <Compile Include="DGTDataSeeder.cs" />
     <Compile Include="DGTRepository.cs" />
     <Compile Include="Entities\Conductor.cs" />
+    <Compile Include="Entities\ConductorInfraccion.cs" />
     <Compile Include="Entities\Infraccion.cs" />
-    <Compile Include="Entities\InfraccionConductor.cs" />
     <Compile Include="Entities\Vehiculo.cs" />
     <Compile Include="IDGTRepository.cs" />
+    <Compile Include="Mappers\ConductorInfraccionMapper.cs" />
     <Compile Include="Mappers\ConductorMapper.cs" />
     <Compile Include="Mappers\InfraccionMapper.cs" />
     <Compile Include="Mappers\VehiculoMapper.cs" />

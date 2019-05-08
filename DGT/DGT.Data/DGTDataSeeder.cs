@@ -34,6 +34,16 @@ namespace DGT.Data
                     _dgtContext.Vehiculos.Add(_vehiculos[y]);
                 }
                 _dgtContext.SaveChanges();
+                for (int x = 0; x < _infracciones.Count; x++)
+                {
+                    _dgtContext.Infracciones.Add(_infracciones[x]);
+                }
+                _dgtContext.SaveChanges();
+                for (int z = 0; z < _conductoresInfracciones.Count; z++)
+                {
+                    _dgtContext.ConductoresInfracciones.Add(_conductoresInfracciones[z]);
+                }
+                _dgtContext.SaveChanges();
 
             }
             catch (Exception ex)
@@ -55,13 +65,24 @@ namespace DGT.Data
 
         private static IList<Conductor> _conductores = new List<Conductor>()
         {
-            new Conductor {DNI = "06543360K", Nombres = "Yair", Apellidos = "Lamb", Puntos = 0, Infracciones = new List<Infraccion>(){ _infracciones[0], _infracciones[1] } },
-            new Conductor {DNI = "X9981928C", Nombres = "Leonardo", Apellidos = "Payne", Puntos = 0, Infracciones = new List<Infraccion>(){ _infracciones[2], _infracciones[3] } },
-            new Conductor {DNI = "A02035574", Nombres = "Carl", Apellidos = "Henson", Puntos = 0, Infracciones = new List<Infraccion>(){ _infracciones[4] } },
-            new Conductor {DNI = "94267190B", Nombres = "Jensen", Apellidos = "Combs", Puntos = 0, Infracciones = new List<Infraccion>(){ _infracciones[5] } },
-            new Conductor {DNI = "Y0223406K", Nombres = "Amiah", Apellidos = "Burton", Puntos = 0, Infracciones = new List<Infraccion>(){ _infracciones[6] } },
-            new Conductor {DNI = "H36251163", Nombres = "Yaretzi", Apellidos = "Mayo", Puntos = 0},
-            new Conductor {DNI = "X3919923X", Nombres = "Kamren", Apellidos = "Huffman", Puntos = 0}
+            new Conductor {DNI = "06543360K", Nombres = "Yair", Apellidos = "Lamb"},
+            new Conductor {DNI = "X9981928C", Nombres = "Leonardo", Apellidos = "Payne"},
+            new Conductor {DNI = "A02035574", Nombres = "Carl", Apellidos = "Henson"},
+            new Conductor {DNI = "94267190B", Nombres = "Jensen", Apellidos = "Combs"},
+            new Conductor {DNI = "Y0223406K", Nombres = "Amiah", Apellidos = "Burton"},
+            new Conductor {DNI = "H36251163", Nombres = "Yaretzi", Apellidos = "Mayo"},
+            new Conductor {DNI = "X3919923X", Nombres = "Kamren", Apellidos = "Huffman"}
+        };
+
+        private static IList<ConductorInfraccion> _conductoresInfracciones = new List<ConductorInfraccion>()
+        {
+            new ConductorInfraccion(){ Conductor = _conductores[0], Infraccion = _infracciones[0], Fecha = DateTime.Now },
+            new ConductorInfraccion(){ Conductor = _conductores[0], Infraccion = _infracciones[1], Fecha = DateTime.Now.AddDays(1) },
+            new ConductorInfraccion(){ Conductor = _conductores[1], Infraccion = _infracciones[2], Fecha = DateTime.Now.AddDays(2) },
+            new ConductorInfraccion(){ Conductor = _conductores[1], Infraccion = _infracciones[3], Fecha = DateTime.Now.AddDays(3) },
+            new ConductorInfraccion(){ Conductor = _conductores[2], Infraccion = _infracciones[4], Fecha = DateTime.Now.AddDays(4) },
+            new ConductorInfraccion(){ Conductor = _conductores[3], Infraccion = _infracciones[5], Fecha = DateTime.Now.AddDays(5) },
+            new ConductorInfraccion(){ Conductor = _conductores[4], Infraccion = _infracciones[6], Fecha = DateTime.Now.AddDays(6) }
         };
 
         private static IList<Vehiculo> _vehiculos = new List<Vehiculo>()

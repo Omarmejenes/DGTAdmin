@@ -26,7 +26,7 @@ namespace DGT.Data.Mappers
             Property(v => v.Modelo).HasMaxLength(50);
             Property(v => v.Modelo).IsUnicode(false);
 
-            HasOptional(v => v.Conductor).WithMany(v => v.Vehiculos).Map(c => c.MapKey("ConductorID")).WillCascadeOnDelete(false);
+            HasRequired(v => v.Conductor).WithMany(v => v.Vehiculos).Map(c => c.MapKey("ConductorID")).WillCascadeOnDelete(false);
         }
     }
 }

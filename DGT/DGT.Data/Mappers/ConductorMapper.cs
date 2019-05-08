@@ -23,7 +23,6 @@ namespace DGT.Data.Mappers
             Property(c => c.Apellidos).IsRequired();
             Property(c => c.Apellidos).HasMaxLength(50);
 
-            Property(c => c.Puntos).IsRequired();
         }
     }
 }

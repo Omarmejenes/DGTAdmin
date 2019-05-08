@@ -35,12 +35,12 @@ namespace DGT.Data
 
         public IQueryable<Infraccion> GetAllInfraccionesByConductor(string dni)
         {
-            return _dgtContext.Conductores.FirstOrDefault(c=> c.DNI.Equals(dni)).Infracciones.AsQueryable();
+            return _dgtContext.Conductores.Include("Infracciones").FirstOrDefault(c=> c.DNI.Equals(dni)).Infracciones.Select(i=> i.Infraccion).AsQueryable();
         }
 
         public IQueryable<Conductor> GetAllConductoresByInfraccion(int id)
         {
-            return _dgtContext.Infracciones.FirstOrDefault(c => c.Id.Equals(id)).Conductores.AsQueryable();
+            return _dgtContext.ConductoresInfracciones.Include("Conductor").Include("Infraccion").Where(ci => ci.Infraccion.Id.Equals(id)).Select(ci=> ci.Conductor).AsQueryable();
         }
 
         public IQueryable<Vehiculo> GetAllVehiculos()
@@ -195,12 +195,12 @@ namespace DGT.Data
             {
                 try
                 {
-                    InfraccionConductor infraccionConductor = new InfraccionConductor()
+                    ConductorInfraccion conductorInfraccion = new ConductorInfraccion()
                     {
                         Conductor = conductor,
                         Infraccion = infraccion
                     };
-                    _dgtContext.Entry(infraccionConductor);
+                    _dgtContext.Entry(conductorInfraccion);
                     return true;
                 }
                 catch
@@ -215,10 +215,10 @@ namespace DGT.Data
         {
             try
             {
-                Infraccion infraccion = _dgtContext.Conductores.FirstOrDefault(c=> c.DNI.Equals("")).Infracciones.FirstOrDefault(i=> i.Id.Equals(id));
+                ConductorInfraccion infraccion = _dgtContext.ConductoresInfracciones.Include("Conductor").Include("Infraccion").FirstOrDefault(i=> i.Infraccion.Id.Equals(id));
                 if (infraccion != null)
                 {
-                    _dgtContext.Conductores.FirstOrDefault(c => c.DNI.Equals("")).Infracciones.Remove(infraccion);
+                    _dgtContext.ConductoresInfracciones.Remove(infraccion);
                     return true;
                 }
             }

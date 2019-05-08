@@ -18,8 +18,6 @@ namespace DGT.Data.Mappers
             Property(i => i.Descripcion).HasMaxLength(255);
             Property(i => i.Descripcion).IsUnicode(false);
 
-            Property(i => i.Descripcion).IsRequired();
-
         }
     }
 }

@@ -49,7 +49,7 @@ namespace DGT.Web.Models
                 DNI = conductor.DNI,
                 Nombres = conductor.Nombres,
                 Apellidos = conductor.Apellidos,
-                Puntos = conductor.Puntos
+                Puntos = 0
             };
         }
 
@@ -62,8 +62,7 @@ namespace DGT.Web.Models
                     Id = conductor.Id,
                     Nombres = conductor.Nombres,
                     Apellidos = conductor.Apellidos,
-                    DNI = conductor.DNI.ToUpper(),
-                    Puntos = conductor.Puntos
+                    DNI = conductor.DNI.ToUpper()
                 };
             }
             catch (Exception)

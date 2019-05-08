@@ -1,5 +1,7 @@
 ﻿
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DGT.Data.Entities
 {
@@ -11,7 +13,7 @@ namespace DGT.Data.Entities
 
         public double Puntos { get; set; }
 
-        public virtual ICollection<Conductor> Conductores { get; set; }
+        public virtual ICollection<ConductorInfraccion> Conductores { get; set; }
 
     }
 }
