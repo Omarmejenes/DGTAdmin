@@ -16,6 +16,8 @@ namespace DGT.Data
 
         IQueryable<Infraccion> GetAllInfraccionesByConductor(string dni);
 
+        IQueryable<Conductor> GetAllConductoresByInfraccion(int id);
+
         IQueryable<Vehiculo> GetAllVehiculos();
 
         Vehiculo GetVehiculoByMatricula(string matricula);

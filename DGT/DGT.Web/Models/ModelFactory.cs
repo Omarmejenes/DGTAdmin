@@ -36,7 +36,8 @@ namespace DGT.Web.Models
                 Id = vehiculo.Id,
                 Matricula = vehiculo.Matricula,
                 Marca = vehiculo.Marca,
-                Modelo = vehiculo.Modelo
+                Modelo = vehiculo.Modelo,
+                DNI = vehiculo.Conductor.DNI
             };
         }
 
@@ -61,8 +62,26 @@ namespace DGT.Web.Models
                     Id = conductor.Id,
                     Nombres = conductor.Nombres,
                     Apellidos = conductor.Apellidos,
-                    DNI = conductor.DNI,
+                    DNI = conductor.DNI.ToUpper(),
                     Puntos = conductor.Puntos
+                };
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public Vehiculo Parse(VehiculoModel vehiculo)
+        {
+            try
+            {
+                return new Vehiculo()
+                {
+                    Id = vehiculo.Id,
+                    Matricula = vehiculo.Matricula.ToUpper(),
+                    Marca = vehiculo.Marca,
+                    Modelo = vehiculo.Modelo
                 };
             }
             catch (Exception)

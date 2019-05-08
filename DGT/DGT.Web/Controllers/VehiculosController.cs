@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using DGT.Data;
+using DGT.Web.Models;
 
 namespace DGT.Web.Controllers
 {
@@ -18,37 +19,34 @@ namespace DGT.Web.Controllers
         public object Get(int page = 1, int pageSize = 5)
         {
             IQueryable<Vehiculo> query;
-            page = page - 1;
+
             query = TheRepository.GetAllVehiculos().OrderBy(c => c.Conductor.DNI);
 
-            var totalCount = query.Count();
-            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-
-            var urlHelper = new UrlHelper(Request);
-            var prevLink = page > 0 ? urlHelper.Link("vehiculos", new { page = page - 1, pageSize = pageSize }) : "";
-            var nextLink = page < totalPages - 1 ? urlHelper.Link("vehiculos", new { page = page + 1, pageSize = pageSize }) : "";
-
-            var results = query.Skip(pageSize * page)
-                               .Take(pageSize)
-                               .ToList()
-                               .Select(s => TheModelFactory.Create(s));
-            return new
-            {
-                TotalCount = totalCount,
-                TotalPages = totalPages,
-                PrevPageLink = prevLink,
-                NextPageLink = nextLink,
-                Results = results
-            };
+            return CreateResponse(query, page, pageSize, "Vehiculos");
         }
 
-        public HttpResponseMessage Post([FromBody] Vehiculo vehiculo)
+        public HttpResponseMessage Post([FromBody] VehiculoModel vehiculo)
         {
             try
             {
-                if (TheRepository.Insert(vehiculo) && TheRepository.SaveAll())
+                Vehiculo vehiculoActual = TheModelFactory.Parse(vehiculo);
+
+                Vehiculo vehiculoExist = TheRepository.GetVehiculoByMatricula(vehiculo.Matricula);
+
+                Conductor conductor = TheRepository.GetConductorByDNI(vehiculo.DNI).FirstOrDefault();
+
+                if (conductor == null || vehiculoExist != null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.Created, TheModelFactory.Create(vehiculo));
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "El vehiculo ya esta resgistrado o no está registrado el DNI como conductor.");
+                }
+                else
+                {
+                    vehiculoActual.Conductor = conductor;
+                }
+
+                if (TheRepository.Insert(vehiculoActual) && TheRepository.SaveAll())
+                {
+                    return Request.CreateResponse(HttpStatusCode.Created, TheModelFactory.Create(vehiculoActual));
                 }
                 else
                 {
@@ -64,22 +62,33 @@ namespace DGT.Web.Controllers
 
         [HttpPatch]
         [HttpPut]
-        public HttpResponseMessage Put(string matricula, [FromBody] Vehiculo vehiculo)
+        public HttpResponseMessage Put(int id, [FromBody] VehiculoModel vehiculo)
         {
             try
             {
+                Vehiculo vehiculoActual = TheModelFactory.Parse(vehiculo);
 
-                var vehiculoOriginal = TheRepository.GetVehiculoByMatricula(matricula);
+                Vehiculo vehiculoOriginal = TheRepository.GetVehiculoById(id).FirstOrDefault();
 
-                if (vehiculoOriginal == null || vehiculoOriginal.Matricula != matricula)
+                Conductor conductorExist = TheRepository.GetConductorByDNI(vehiculo.DNI).FirstOrDefault();
+
+                if (vehiculoOriginal == null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotModified, "No se encuentra el vehiulo regstrado");
+                    return Request.CreateResponse(HttpStatusCode.NotModified, "No se encuentra el vehiculo regstrado");
                 }
-                vehiculo.Matricula = vehiculoOriginal.Matricula;
-
-                if (TheRepository.Update(vehiculoOriginal, vehiculo) && TheRepository.SaveAll())
+                if (conductorExist == null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, TheModelFactory.Create(vehiculo));
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "No está registrado el DNI como conductor.");
+                }
+                else
+                {
+                    vehiculoActual.Conductor = conductorExist;
+                }
+                vehiculoActual.Id = vehiculoOriginal.Id;
+
+                if (TheRepository.Update(vehiculoOriginal, vehiculoActual) && TheRepository.SaveAll())
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, TheModelFactory.Create(vehiculoActual));
                 }
                 else
                 {
@@ -93,20 +102,15 @@ namespace DGT.Web.Controllers
             }
         }
 
-        public HttpResponseMessage Delete(string matricula)
+        public HttpResponseMessage Delete(int id)
         {
             try
             {
-                var vehiculo = TheRepository.GetVehiculoByMatricula(matricula);
+                Vehiculo vehiculo = TheRepository.GetVehiculoById(id).FirstOrDefault();
 
                 if (vehiculo == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound);
-                }
-
-                if (vehiculo.Conductor != null)
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "No se puede eliminar.");
                 }
 
                 if (TheRepository.DeleteVehiculo(vehiculo.Id) && TheRepository.SaveAll())

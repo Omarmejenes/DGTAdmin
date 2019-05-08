@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Routing;
 
 namespace DGT.Web.Controllers
 {
@@ -22,8 +21,8 @@ namespace DGT.Web.Controllers
             IQueryable<Conductor> query;
 
             query = TheRepository.GetAllConductores().OrderBy(c => c.DNI);
-            int total = query.Count();
-            return CreateResponse(query, page, pageSize);
+
+            return CreateResponse(query, page, pageSize, "Conductores");
         }
 
         public object Get(string dni, int page = 1, int pageSize = 5)
@@ -32,7 +31,7 @@ namespace DGT.Web.Controllers
 
             query = TheRepository.GetConductorByDNI(dni).OrderBy(c => c.DNI);
 
-            return CreateResponse(query, page, pageSize);
+            return CreateResponse(query, page, pageSize, "Conductores");
         }
 
         public HttpResponseMessage Post([FromBody]ConductorModel conductor)
@@ -41,6 +40,9 @@ namespace DGT.Web.Controllers
             {
                 Conductor conductorActual = TheModelFactory.Parse(conductor);
                 if (conductorActual == null) return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Conductor no encontrado");
+
+                Conductor conductorExist = TheRepository.GetConductorByDNI(conductorActual.DNI).FirstOrDefault();
+                if (conductorExist != null) return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Ya existe un Conductor con ese DNI");
 
                 if (TheRepository.Insert(conductorActual))
                 {
@@ -67,13 +69,20 @@ namespace DGT.Web.Controllers
             try
             {
 
-                var conductorActual = TheModelFactory.Parse(conductorModel);
+                Conductor conductorActual = TheModelFactory.Parse(conductorModel);
 
-                var conductorOriginal = TheRepository.GetConductorById(id).First();
+                Conductor conductorOriginal = TheRepository.GetConductorById(id).First();
+
+                Conductor conductorExist = TheRepository.GetConductorByDNI(conductorActual.DNI).FirstOrDefault();
 
                 if (conductorOriginal == null)
                 {
-                    Request.CreateErrorResponse(HttpStatusCode.BadRequest, "No se encontro conductor");
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "No se encontro conductor");
+                }
+
+                if (conductorExist != null)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Ya existe un Conductor con ese DNI");
                 }
 
                 if (TheRepository.Update(conductorOriginal, conductorActual) && TheRepository.SaveAll())
@@ -110,30 +119,6 @@ namespace DGT.Web.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }
-        }
-
-        private object CreateResponse(IQueryable<Conductor> query, int page, int pageSize)
-        {
-            page = page- 1;
-            var totalCount = query.Count();
-            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-
-            var urlHelper = new UrlHelper(Request);
-            var prevLink = page > 0 ? urlHelper.Link("conductores", new { page = page - 1, pageSize = pageSize }) : "";
-            var nextLink = page < totalPages - 1 ? urlHelper.Link("conductores", new { page = page + 1, pageSize = pageSize }) : "";
-
-            var results = query.Skip(pageSize * page)
-                               .Take(pageSize)
-                               .ToList()
-                               .Select(s => TheModelFactory.Create(s));
-            return new
-            {
-                TotalCount = totalCount,
-                TotalPages = totalPages,
-                PrevPageLink = prevLink,
-                NextPageLink = nextLink,
-                Results = results
-            };
         }
     }
 }

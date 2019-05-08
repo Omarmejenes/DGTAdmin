@@ -38,9 +38,14 @@ namespace DGT.Data
             return _dgtContext.Conductores.FirstOrDefault(c=> c.DNI.Equals(dni)).Infracciones.AsQueryable();
         }
 
+        public IQueryable<Conductor> GetAllConductoresByInfraccion(int id)
+        {
+            return _dgtContext.Infracciones.FirstOrDefault(c => c.Id.Equals(id)).Conductores.AsQueryable();
+        }
+
         public IQueryable<Vehiculo> GetAllVehiculos()
         {
-            return _dgtContext.Vehiculos.AsQueryable();
+            return _dgtContext.Vehiculos.Include("Conductor").AsQueryable();
         }
 
         public Vehiculo GetVehiculoByMatricula(string matricula)
@@ -98,7 +103,7 @@ namespace DGT.Data
 
         public IQueryable<Vehiculo> GetVehiculoById(int id)
         {
-            return _dgtContext.Vehiculos.Where(v => v.Id.Equals(id));
+            return _dgtContext.Vehiculos.Include("Conductor").Where(v => v.Id.Equals(id));
         }
 
         public bool Insert(Vehiculo vehiculo)

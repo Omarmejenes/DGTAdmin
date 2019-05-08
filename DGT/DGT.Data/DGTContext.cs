@@ -28,6 +28,7 @@ namespace DGT.Data
                 .WithMany(i => i.Conductores)
                 .Map(cs =>
                 {
+                    cs.ToTable("ConductoresInfracciones");
                     cs.MapLeftKey("ConductorId");
                     cs.MapRightKey("InfraccionId");
                     cs.ToTable("ConductoresInfracciones");

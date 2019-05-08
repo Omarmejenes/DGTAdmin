@@ -91,7 +91,74 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="button" id="btnSave" class="btn btn-primary">Guardar</button>
+                    <button type="button" id="conductorSave" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Vehiculos -->
+    <div class="modal fade" id="vehiculoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Vehiculo</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="vehiculoId" />
+                        <div class="form-group">
+                            <label for="name">Matricula</label>
+                            <input type="text" class="form-control" id="licencePlate" placeholder="Matricula">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Marca</label>
+                            <input type="text" class="form-control" id="brand" placeholder="Marca">
+                        </div>
+                        <div class="form-group">
+                            <label for="placeOfBirth">Modelo</label>
+                            <input type="text" class="form-control" id="model" placeholder="Modelo">
+                        </div>
+                        <div class="form-group">
+                            <label for="placeOfBirth">Conductor Habitual</label>
+                            <input type="text" class="form-control" id="dniCar" placeholder="DNI">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="vehiculoSave" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- Modal Infracciones -->
+    <div class="modal fade" id="infraccionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Infracción</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="infraccionId" />
+                        <div class="form-group">
+                            <label for="name">Nombres</label>
+                            <input type="text" class="form-control" id="name" placeholder="Nombres">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Apellidos</label>
+                            <input type="text" class="form-control" id="lastname" placeholder="Apellidos">
+                        </div>
+                        <div class="form-group">
+                            <label for="placeOfBirth">DNI</label>
+                            <input type="text" class="form-control" id="dni" placeholder="DNI">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="infraccionSave" class="btn btn-primary">Guardar</button>
                 </div>
             </div>
         </div>
@@ -121,7 +188,118 @@
                         Apellidos: $("#lastname").val(),
                         DNI: $("#dni").val()
                     };
-                    $.ajax({ url: "api/Conductores?id=" + conductor.Id, type: conductor.Id ? "PUT":"POST", data: conductor, dataType: "json" })
+                    $.ajax({ url: "api/Conductores?id=" + conductor.Id, type: conductor.Id ? "PUT" : "POST", data: conductor, dataType: "json" })
+                        .done(function () {
+                            grids.Conductores.reload();
+                            $("#conductorModal").modal("hide");
+                        })
+                        .fail(function (response) {
+                            if (response && response.responseJSON && response.responseJSON.message) {
+                                alert(response.responseJSON.message);
+                            }
+                            else {
+                                alert("Unable to save.");
+                            }
+                            $("#conductorModal").modal("hide");
+                        });
+                },
+                Remove: function (e) {
+                    if (confirm('Esto eliminará el registro, ¿está seguro?')) {
+                        $.ajax({ url: "api/Conductores?id=" + e.data.record.id, type: "DELETE" })
+                            .done(function () {
+                                grids.Conductores.reload();
+                            })
+                            .fail(function (response) {
+                                if (response && response.responseJSON && response.responseJSON.message) {
+                                    alert(response.responseJSON.message);
+                                }
+                                else {
+                                    alert("Unable to remove.");
+                                }
+                            });
+                    }
+                }
+            },
+            Vehiculos: {
+                Add: function () {
+                    $("#vehiculoId").val("");
+                    $("#licencePlate").val("");
+                    $("#brand").val("");
+                    $("#model").val("");
+                    $("#dniCar").val("");
+                    $("#vehiculoModal").modal("show");
+                },
+                Edit: function (e) {
+                    $("#vehiculoId").val(e.data.record.id);
+                    $("#licencePlate").val(e.data.record.matricula);
+                    $("#brand").val(e.data.record.marca);
+                    $("#model").val(e.data.record.modelo);
+                    $("#dniCar").val(e.data.record.dni);
+                    $("#vehiculoModal").modal("show");
+                },
+                Save: function () {
+                    var vehiculo = {
+                        Id: $("#vehiculoId").val(),
+                        Matricula: $("#licencePlate").val(),
+                        Marca: $("#brand").val(),
+                        Modelo: $("#model").val(),
+                        DNI: $("#dniCar").val()
+                    };
+                    $.ajax({ url: "api/Vehiculos?id=" + vehiculo.Id, type: vehiculo.Id ? "PUT" : "POST", data: vehiculo, dataType: "json" })
+                        .done(function () {
+                            grids.Vehiculos.reload();
+                            $("#vehiculoModal").modal("hide");
+                        })
+                        .fail(function (response) {
+                            if (response && response.responseJSON && response.responseJSON.message) {
+                                alert(response.responseJSON.message);
+                            }
+                            else {
+                                alert("Unable to save.");
+                            }
+                            $("#vehiculoModal").modal("hide");
+                        });
+                },
+                Remove: function (e) {
+                    if (confirm('Esto eliminará el registro, ¿está seguro?')) {
+                        $.ajax({ url: "api/Vehiculos?id=" + e.data.record.id, type: "DELETE" })
+                            .done(function () {
+                                grids.Vehiculos.reload();
+                            })
+                            .fail(function (response) {
+                                if (response && response.responseJSON && response.responseJSON.message) {
+                                    alert(response.responseJSON.message);
+                                }
+                                else {
+                                    alert("Unable to remove.");
+                                }
+                            });
+                    }
+                }
+            },
+            Infracciones: {
+                Add: function () {
+                    $("#conductorId").val("");
+                    $("#name").val("");
+                    $("#lastname").val("");
+                    $("#dni").val("");
+                    $("#conductorModal").modal("show");
+                },
+                Edit: function (e) {
+                    $("#conductorId").val(e.data.record.id);
+                    $("#name").val(e.data.record.nombres);
+                    $("#lastname").val(e.data.record.apellidos);
+                    $("#dni").val(e.data.record.dni);
+                    $("#conductorModal").modal("show");
+                },
+                Save: function () {
+                    var conductor = {
+                        Id: $("#conductorId").val(),
+                        Nombres: $("#name").val(),
+                        Apellidos: $("#lastname").val(),
+                        DNI: $("#dni").val()
+                    };
+                    $.ajax({ url: "api/Conductores?id=" + conductor.Id, type: conductor.Id ? "PUT" : "POST", data: conductor, dataType: "json" })
                         .done(function () {
                             grids.Conductores.reload();
                             $("#conductorModal").modal("hide");
@@ -133,89 +311,7 @@
                 },
                 Remove: function (e) {
                     if (confirm('Esto eliminará el registro, ¿está seguro?')) {
-                        $.ajax({ url: "api/Conductores?id=" + e.data.record.id, type: "DELETE"})
-                            .done(function () {
-                                grids.Conductores.reload();
-                            })
-                            .fail(function () {
-                                alert("Unable to remove.");
-                            });
-                    }
-                }
-            },
-            Vehiculos: {
-                Add: function () {
-                    $("#conductorId").val("");
-                    $("#name").val("");
-                    $("#dni").val("");
-                    $("#conductorModal").modal("show");
-                },
-                Edit: function (e) {
-                    $("#conductorId").val(e.data.id);
-                    $("#name").val(e.data.record.nombre);
-                    $("#dni").val(e.data.record.dni);
-                    $("#conductorModal").modal("show");
-                },
-                Save: function () {
-                    var conductor = {
-                        Id: $("#conductorId").val(),
-                        Nombre: $("#name").val(),
-                        DNI: $("#dni").val()
-                    };
-                    $.ajax({ url: "Conductores/Save", type: "POST", data: { conductor: conductor } })
-                        .done(function () {
-                            grid.reload();
-                            $("#conductorModal").modal("hide");
-                        })
-                        .fail(function () {
-                            alert("Unable to save.");
-                            $("#conductorModal").modal("hide");
-                        });
-                },
-                Remove: function (e) {
-                    if (confirm('Esto eliminará el registro, ¿está seguro?')) {
-                        $.ajax({ url: "Conductores", type: "GET", data: { id: e.data.id } })
-                            .done(function () {
-                                grids.Conductores.reload();
-                            })
-                            .fail(function () {
-                                alert("Unable to remove.");
-                            });
-                    }
-                }
-            },
-            Infracciones: {
-                Add: function () {
-                    $("#conductorId").val("");
-                    $("#name").val("");
-                    $("#dni").val("");
-                    $("#conductorModal").modal("show");
-                },
-                Edit: function (e) {
-                    $("#conductorId").val(e.data.id);
-                    $("#name").val(e.data.record.nombre);
-                    $("#dni").val(e.data.record.dni);
-                    $("#conductorModal").modal("show");
-                },
-                Save: function () {
-                    var conductor = {
-                        Id: $("#conductorId").val(),
-                        Nombre: $("#name").val(),
-                        DNI: $("#dni").val()
-                    };
-                    $.ajax({ url: "Conductores", type: "POST", data: { conductor: conductor } })
-                        .done(function () {
-                            grid.reload();
-                            $("#conductorModal").modal("hide");
-                        })
-                        .fail(function () {
-                            alert("Unable to save.");
-                            $("#conductorModal").modal("hide");
-                        });
-                },
-                Remove: function (e) {
-                    if (confirm('Esto eliminará el registro, ¿está seguro?')) {
-                        $.ajax({ url: "Conductores", type: "GET", data: { id: e.data.id } })
+                        $.ajax({ url: "api/Conductores?id=" + e.data.record.id, type: "DELETE" })
                             .done(function () {
                                 grids.Conductores.reload();
                             })
@@ -269,6 +365,7 @@
                     { field: "matricula", title: "Matricula", sortable: false },
                     { field: "marca", title: "Marca", sortable: false },
                     { field: "modelo", title: "modelo", sortable: false },
+                    { field: "dni", title: "DNI", sortable: false, hidden: true },
                     { title: "", field: "Edit", width: 34, type: "icon", icon: "glyphicon-pencil", tooltip: "Edit", events: { "click": Actions.Vehiculos.Edit } },
                     { title: "", field: "Delete", width: 34, type: "icon", icon: "glyphicon-remove", tooltip: "Delete", events: { "click": Actions.Vehiculos.Remove } }
                 ],
@@ -298,7 +395,12 @@
         $(document).ready(function () {
             initializeGrids();
             $("#btnAddConductor").on("click", Actions.Conductores.Add);
-            $("#btnSave").on("click", Actions.Conductores.Save);
+            $("#btnAddVehiculo").on("click", Actions.Vehiculos.Add);
+            $("#btnAddInfraccion").on("click", Actions.Infracciones.Add);
+            $("#conductorSave").on("click", Actions.Conductores.Save);
+            $("#vehiculoSave").on("click", Actions.Vehiculos.Save);
+            $("#infraccionSave").on("click", Actions.Infracciones.Save);
+
             $("#searchDNIbtn").on("click", function () {
                 grids.Conductores.data().params = { page: 1, pageSize: 5 };
                 grids.Conductores.data().dataSource.data = {};
