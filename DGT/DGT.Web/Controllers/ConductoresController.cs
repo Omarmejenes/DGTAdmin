@@ -91,7 +91,7 @@ namespace DGT.Web.Controllers
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotModified, "No se pudo salvar en la base de datos.");
+                    return Request.CreateErrorResponse(HttpStatusCode.NotModified, "No se pudo salvar en la base de datos.");
                 }
 
             }
@@ -111,7 +111,7 @@ namespace DGT.Web.Controllers
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "No se pudo salvar en la base de datos.");
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "No se pudo salvar en la base de datos.");
                 }
 
             }

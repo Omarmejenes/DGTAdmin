@@ -57,7 +57,7 @@ namespace DGT.Web.Controllers
 
                 if (infraccionOriginal == null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotModified, "No se encuentra la infracción");
+                    return Request.CreateErrorResponse(HttpStatusCode.NotModified, "No se encuentra la infracción");
                 }
 
                 infraccion.Id = infraccionOriginal.Id;
@@ -90,7 +90,7 @@ namespace DGT.Web.Controllers
                 var conductores = TheRepository.GetAllConductoresByInfraccion(id);
                 if (conductores.Count() > 0)
                 {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "No se puede eliminar infracción porque hay conductores con esta infracción.");
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "No se puede eliminar infracción porque hay conductores con esta infracción.");
                 }
 
                 if (TheRepository.DeleteInfraccion(id) && TheRepository.SaveAll())

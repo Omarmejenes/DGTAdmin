@@ -143,16 +143,12 @@
                     <form>
                         <input type="hidden" id="infraccionId" />
                         <div class="form-group">
-                            <label for="name">Nombres</label>
-                            <input type="text" class="form-control" id="name" placeholder="Nombres">
+                            <label for="name">Descripción</label>
+                            <textarea rows="4" cols="50" class="form-control" id="description" placeholder="Descripción"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="name">Apellidos</label>
-                            <input type="text" class="form-control" id="lastname" placeholder="Apellidos">
-                        </div>
-                        <div class="form-group">
-                            <label for="placeOfBirth">DNI</label>
-                            <input type="text" class="form-control" id="dni" placeholder="DNI">
+                            <label for="name">Puntos</label>
+                            <input type="text" class="form-control" id="points" placeholder="Puntos">
                         </div>
                     </form>
                 </div>
@@ -279,44 +275,51 @@
             },
             Infracciones: {
                 Add: function () {
-                    $("#conductorId").val("");
-                    $("#name").val("");
-                    $("#lastname").val("");
-                    $("#dni").val("");
-                    $("#conductorModal").modal("show");
+                    $("#infraccionId").val("");
+                    $("#description").val("");
+                    $("#points").val("");
+                    $("#infraccionModal").modal("show");
                 },
                 Edit: function (e) {
-                    $("#conductorId").val(e.data.record.id);
-                    $("#name").val(e.data.record.nombres);
-                    $("#lastname").val(e.data.record.apellidos);
-                    $("#dni").val(e.data.record.dni);
-                    $("#conductorModal").modal("show");
+                    $("#infraccionId").val(e.data.record.id);
+                    $("#description").val(e.data.record.descripcion);
+                    $("#points").val(e.data.record.puntos);
+                    $("#infraccionModal").modal("show");
                 },
                 Save: function () {
-                    var conductor = {
-                        Id: $("#conductorId").val(),
-                        Nombres: $("#name").val(),
-                        Apellidos: $("#lastname").val(),
-                        DNI: $("#dni").val()
+                    var infraccion = {
+                        Id: $("#infraccionId").val(),
+                        Descripcion: $("#description").val(),
+                        Puntos: $("#points").val()
                     };
-                    $.ajax({ url: "api/Conductores?id=" + conductor.Id, type: conductor.Id ? "PUT" : "POST", data: conductor, dataType: "json" })
+                    $.ajax({ url: "api/Infracciones?id=" + infraccion.Id, type: infraccion.Id ? "PUT" : "POST", data: infraccion, dataType: "json" })
                         .done(function () {
-                            grids.Conductores.reload();
-                            $("#conductorModal").modal("hide");
+                            grids.Infracciones.reload();
+                            $("#infraccionModal").modal("hide");
                         })
-                        .fail(function () {
-                            alert("Unable to save.");
-                            $("#conductorModal").modal("hide");
+                        .fail(function (response) {
+                            if (response && response.responseJSON && response.responseJSON.message) {
+                                alert(response.responseJSON.message);
+                            }
+                            else {
+                                alert("Unable to save.");
+                            }
+                            $("#infraccionModal").modal("hide");
                         });
                 },
                 Remove: function (e) {
                     if (confirm('Esto eliminará el registro, ¿está seguro?')) {
-                        $.ajax({ url: "api/Conductores?id=" + e.data.record.id, type: "DELETE" })
+                        $.ajax({ url: "api/Infracciones?id=" + e.data.record.id, type: "DELETE" })
                             .done(function () {
-                                grids.Conductores.reload();
+                                grids.Infracciones.reload();
                             })
-                            .fail(function () {
-                                alert("Unable to remove.");
+                            .fail(function (response) {
+                                if (response && response.responseJSON && response.responseJSON.message) {
+                                    alert(response.responseJSON.message);
+                                }
+                                else {
+                                    alert("Unable to remove.");
+                                }
                             });
                     }
                 }
