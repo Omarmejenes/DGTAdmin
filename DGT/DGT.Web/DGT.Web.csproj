@@ -134,6 +134,7 @@
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
+    <Compile Include="Controllers\ConductoresInfraccionesController.cs" />
     <Compile Include="Controllers\InfraccionesController.cs" />
     <Compile Include="Controllers\ConductoresController.cs" />
     <Compile Include="Controllers\VehiculosController.cs" />

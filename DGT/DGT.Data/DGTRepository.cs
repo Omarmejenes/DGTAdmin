@@ -35,7 +35,7 @@ namespace DGT.Data
 
         public IQueryable<Infraccion> GetAllInfraccionesByConductor(string dni)
         {
-            return _dgtContext.Conductores.Include("Infracciones").FirstOrDefault(c=> c.DNI.Equals(dni)).Infracciones.Select(i=> i.Infraccion).AsQueryable();
+            return _dgtContext.ConductoresInfracciones.Include("Conductor").Include("Infraccion").Where(c=> c.Conductor.DNI.Equals(dni)).Select(ci=> ci.Infraccion).AsQueryable();
         }
 
         public IQueryable<Conductor> GetAllConductoresByInfraccion(int id)
@@ -187,35 +187,24 @@ namespace DGT.Data
             return false;
         }
 
-        public bool Insert(int conductorId, int infraccioinId)
-        {
-            Conductor conductor = _dgtContext.Conductores.FirstOrDefault(c => c.Id == conductorId);
-            Infraccion infraccion = _dgtContext.Infracciones.FirstOrDefault(c => c.Id == infraccioinId);
-            if (conductor != null && infraccion != null)
-            {
-                try
-                {
-                    ConductorInfraccion conductorInfraccion = new ConductorInfraccion()
-                    {
-                        Conductor = conductor,
-                        Infraccion = infraccion
-                    };
-                    _dgtContext.Entry(conductorInfraccion);
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-            return false;
-        }
-
-        public bool DeleteInfraccionConductor(int id)
+        public bool Insert(ConductorInfraccion conductorInfraccion)
         {
             try
             {
-                ConductorInfraccion infraccion = _dgtContext.ConductoresInfracciones.Include("Conductor").Include("Infraccion").FirstOrDefault(i=> i.Infraccion.Id.Equals(id));
+                _dgtContext.Entry(conductorInfraccion);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteConductorInfraccion(int id)
+        {
+            try
+            {
+                ConductorInfraccion infraccion = _dgtContext.ConductoresInfracciones.Include("Conductor").Include("Infraccion").FirstOrDefault(i=> i.Id.Equals(id));
                 if (infraccion != null)
                 {
                     _dgtContext.ConductoresInfracciones.Remove(infraccion);

@@ -21,7 +21,7 @@
         <h2>Conductores</h2>
         <br />
         <div class="row">
-            <div id="filters" class="col-md-7">
+            <div id="conductoresfilters" class="col-md-7">
                 <div class="input-group">
                     <input type="text" id="searchDNI" class="form-control" placeholder="Buscar por DNI">
                     <span class="input-group-btn">
@@ -55,6 +55,14 @@
         <h2>Infracciones</h2>
         <br />
         <div class="row">
+            <div id="infraccionfilters" class="col-md-7">
+                <div class="input-group">
+                    <input type="text" id="searchInfracciones" class="form-control" placeholder="Buscar por conductor">
+                    <span class="input-group-btn">
+                        <button type="button" id="searchInfraccionesbtn" class="btn btn-default">Buscar</button>
+                    </span>
+                </div>
+            </div>
             <div class="col-md-3"></div>
             <div class="col-md-9" style="margin-top:10px;">
                 <button type="button" id="btnAddInfraccion" class="btn btn-default pull-right">Agregar Infracción</button>
@@ -347,7 +355,7 @@
                     { field: "nombres", title: "Nombres", sortable: false },
                     { field: "apellidos", title: "Apellidos", sortable: false },
                     { field: "dni", title: "DNI", sortable: false },
-                    { field: "puntos", title: "Puntos", sortable: false },
+                    { field: "puntos", title: "Puntos", sortable: true },
                     { title: "", field: "Edit", width: 34, type: "icon", icon: "glyphicon-pencil", tooltip: "Edit", events: { "click": Actions.Conductores.Edit } },
                     { title: "", field: "Delete", width: 34, type: "icon", icon: "glyphicon-remove", tooltip: "Delete", events: { "click": Actions.Conductores.Remove } }
                 ],
@@ -388,6 +396,7 @@
                     { field: "id", title: "Id", sortable: false, hidden: true },
                     { field: "descripcion", title: "Descripción", sortable: false },
                     { field: "puntos", title: "Puntos", sortable: false },
+                    { field: "fecha", title: "Fecha", sortable: false, renderer: function (value) { return typeof value == "string" ? value : ""; } },
                     { title: "", field: "Edit", width: 34, type: "icon", icon: "glyphicon-pencil", tooltip: "Edit", events: { "click": Actions.Infracciones.Edit } },
                     { title: "", field: "Delete", width: 34, type: "icon", icon: "glyphicon-remove", tooltip: "Delete", events: { "click": Actions.Infracciones.Remove } }
                 ],
@@ -408,13 +417,26 @@
                 grids.Conductores.data().params = { page: 1, pageSize: 5 };
                 grids.Conductores.data().dataSource.data = {};
                 grids.Conductores.reload({ dni: $("#searchDNI").val() });
-                $("#filters input[type=text]").val("");
+                $("#conductoresfilters input[type=text]").val("");
             });
             $("#limpiar").click(function () {
-                $("#filters input[type=text]").val("");
+                $("#conductoresfilters input[type=text]").val("");
                 grids.Conductores.data().params = { page: 1, pageSize: 5 };
                 grids.Conductores.data().dataSource.data = {};
                 grids.Conductores.reload();
+            });
+
+            $("#searchInfraccionesbtn").on("click", function () {
+                grids.Infracciones.data().params = { page: 1, pageSize: 5 };
+                grids.Infracciones.data().dataSource.data = {};
+                grids.Infracciones.reload({ dni: $("#searchInfracciones").val() });
+                $("#infraccionfilters input[type=text]").val("");
+            });
+            $("#limpiar").click(function () {
+                $("#infraccionfilters input[type=text]").val("");
+                grids.Infracciones.data().params = { page: 1, pageSize: 5 };
+                grids.Infracciones.data().dataSource.data = {};
+                grids.Infracciones.reload();
             });
         });
     </script>

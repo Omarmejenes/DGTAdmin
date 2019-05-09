@@ -39,8 +39,8 @@ namespace DGT.Data
         bool Update(Infraccion infraccionOriginal, Infraccion infraccionActual);
         bool DeleteInfraccion(int id);
 
-        bool Insert(int infraccionId, int vehiculoId);
-        bool DeleteInfraccionConductor(int id);
+        bool Insert(ConductorInfraccion conductorInfraccion);
+        bool DeleteConductorInfraccion(int id);
 
         bool SaveAll();
     }

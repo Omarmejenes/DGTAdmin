@@ -44,6 +44,14 @@ namespace DGT.Web.Controllers
                     vehiculoActual.Conductor = conductor;
                 }
 
+                IQueryable<Vehiculo> vehiculos = TheRepository.GetVehiculosByDNI(conductor.DNI);
+
+                if (vehiculos.Count() > 10)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "El conductor ya esta resgistrado con el maximo de vehiculos.");
+                }
+
+
                 if (TheRepository.Insert(vehiculoActual) && TheRepository.SaveAll())
                 {
                     return Request.CreateResponse(HttpStatusCode.Created, TheModelFactory.Create(vehiculoActual));
@@ -85,6 +93,13 @@ namespace DGT.Web.Controllers
                     vehiculoActual.Conductor = conductorExist;
                 }
                 vehiculoActual.Id = vehiculoOriginal.Id;
+
+                IQueryable<Vehiculo> vehiculos = TheRepository.GetVehiculosByDNI(conductorExist.DNI);
+
+                if (vehiculos.Count() > 10)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "El conductor ya esta resgistrado con el maximo de vehiculos.");
+                }
 
                 if (TheRepository.Update(vehiculoOriginal, vehiculoActual) && TheRepository.SaveAll())
                 {

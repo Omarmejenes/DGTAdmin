@@ -16,20 +16,20 @@ namespace DGT.Web.Controllers
         }
 
 
-        public object Get(int page = 1, int pageSize = 5)
+        public object Get(int page = 1, int pageSize = 5, string sortBy = "", string direction = "")
         {
             IQueryable<Conductor> query;
 
-            query = TheRepository.GetAllConductores().OrderBy(c => c.DNI);
+            query = TheRepository.GetAllConductores().OrderBy(c => c.Apellidos);
 
             return CreateResponse(query, page, pageSize, "Conductores");
         }
 
-        public object Get(string dni, int page = 1, int pageSize = 5)
+        public object Get(string dni, int page = 1, int pageSize = 5, string sortBy = "", string direction = "")
         {
             IQueryable<Conductor> query;
 
-            query = TheRepository.GetConductorByDNI(dni).OrderBy(c => c.DNI);
+            query = TheRepository.GetConductorByDNI(dni).OrderBy(c => c.Apellidos);
 
             return CreateResponse(query, page, pageSize, "Conductores");
         }

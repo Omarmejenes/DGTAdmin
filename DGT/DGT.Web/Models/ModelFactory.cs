@@ -53,6 +53,18 @@ namespace DGT.Web.Models
             };
         }
 
+        public InfraccionModel Create(ConductorInfraccion infraccion)
+        {
+            return new InfraccionModel()
+            {
+                Url = _UrlHelper.Link("Infracciones", new { id = infraccion.Infraccion.Id }),
+                Id = infraccion.Infraccion.Id,
+                Descripcion = infraccion.Infraccion.Descripcion,
+                Puntos = infraccion.Infraccion.Puntos,
+                Fecha = infraccion.Fecha
+            };
+        }
+
         public Conductor Parse(ConductorModel conductor)
         {
             try

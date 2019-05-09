@@ -26,6 +26,16 @@ namespace DGT.Web.Controllers
 
         }
 
+        public object Get(string dni, int page = 1, int pageSize = 5)
+        {
+            IQueryable<Infraccion> query;
+
+            query = TheRepository.GetAllInfraccionesByConductor(dni).OrderBy(c => c.Puntos);
+
+            return CreateResponse(query, page, pageSize, "Infracciones");
+
+        }
+
         public HttpResponseMessage Post([FromBody] Infraccion infraccion)
         {
             try
@@ -53,7 +63,7 @@ namespace DGT.Web.Controllers
             try
             {
 
-                var infraccionOriginal = TheRepository.GetInfraccionById(id).FirstOrDefault();
+                Infraccion infraccionOriginal = TheRepository.GetInfraccionById(id).FirstOrDefault();
 
                 if (infraccionOriginal == null)
                 {

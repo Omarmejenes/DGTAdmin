@@ -11,5 +11,7 @@ namespace DGT.Web.Models
         public string Descripcion { get; set; }
 
         public double Puntos { get; set; }
+
+        public DateTime? Fecha { get; set; }
     }
 }
